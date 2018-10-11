@@ -5,6 +5,9 @@
 #include "DeclarationParser.h"
 #include "InstructionParser.h"
 
+#include <map>
+using std::map;
+
 #include <vector>
 using std::vector;
 
@@ -25,6 +28,12 @@ public:
 
     bool dataGrammarParsing();
     bool textGrammarParsing();
+
+    map<string, int>& getRegisters();
+    vector<unsigned char>& getMemory();
+    map<string, unsigned int>& getLabels();
+    map<string, int>& getConstants();
+    // vector<Instruction*>& getProgram();
 
 private:
 
@@ -50,6 +59,8 @@ private:
     bool textGrammarActive;
     bool streamParsedSafely;
 
+
+    // vector<Instruction*> program;
 
 };
 

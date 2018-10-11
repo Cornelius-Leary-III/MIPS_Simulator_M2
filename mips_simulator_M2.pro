@@ -16,7 +16,12 @@ HEADERS += \
     tst_declarationParser.h \
     tst_instructionParser.h \
     tst_lexer.h \
-    tst_token.h
+    tst_token.h \
+    VirtualMachineContents.h \
+    Registers.h \
+    Labels.h \
+    Constants.h \
+    Memory.h
 
 SOURCES += \
         main.cpp \
@@ -24,4 +29,9 @@ SOURCES += \
     lexer.cpp \
     parser.cpp \
     DeclarationParser.cpp \
-    InstructionParser.cpp
+    InstructionParser.cpp \
+    VirtualMachineContents.cpp \
+    Registers.cpp \
+    Labels.cpp \
+    Constants.cpp \
+    Memory.cpp
