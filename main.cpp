@@ -3,6 +3,11 @@
 #include "tst_declarationParser.h"
 #include "tst_instructionParser.h"
 
+#include "tst_Constants.h"
+#include "tst_Registers.h"
+#include "tst_Memory.h"
+#include "tst_Labels.h"
+
 #include "tst_mips_simulator.h"
 
 

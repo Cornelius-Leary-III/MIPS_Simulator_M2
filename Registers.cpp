@@ -3,38 +3,61 @@
 //TODO: implement appropriate constructor(s).
 Registers::Registers()
 {
-
+    registers;
+    registersEnd = registers.end();
 }
 
-//TODO: implement method to add register to map.
 bool Registers::addRegister(const string& registerName, int registerValue)
 {
-    return true;
+    auto insertIter = registers.insert(make_pair(registerName, registerValue));
+    return insertIter.second;
 }
 
-//TODO: implement method to update register with new value.
 bool Registers::updateRegister(const string& registerName, int registerValue)
 {
-    return true;
+    auto updateIter = registers.find(registerName);
+    if (updateIter != registersEnd)
+    {
+        updateIter->second = registerValue;
+        return true;
+    }
+    else
+    {
+        auto insertIter = registers.insert(make_pair(registerName, registerValue));
+        return insertIter.second;
+    }
 }
 
-//TODO: implement method to move contents of one register to another register.
 map<string, int>::iterator Registers::moveRegisterContents(const string& destination,
                                                            const string& source)
 {
-    return registers.begin();
+    auto sourceIter = lookupRegister(source);
+    if (sourceIter != registersEnd)
+    {
+        if (updateRegister(destination, sourceIter->second))
+        {
+            updateRegister(source, 0);
+            return registers.find(destination);
+        }
+    }
+
+    return registersEnd;
 }
 
-//TODO: implement method to lookup a specific register.
 map<string, int>::iterator Registers::lookupRegister(const string& registerName)
 {
-    return registers.begin();
+    auto lookupIter = registers.find(registerName);
+    if (lookupIter != registersEnd)
+    {
+        return lookupIter;
+    }
+
+    return registersEnd;
 }
 
-//TODO: implement method to set registers with new map of registers.
 void Registers::setRegisters(const map<string, int>& newRegisters)
 {
-    return;
+    registers = newRegisters;
 }
 
 map<string, int>& Registers::getRegisters()

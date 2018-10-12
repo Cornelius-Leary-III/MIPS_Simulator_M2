@@ -25,6 +25,7 @@ public:
 private:
 
     map<string, int> registers;
+    map<string, int>::iterator registersEnd;
 };
 
 #endif // REGISTERS_H

@@ -5,24 +5,54 @@
 Constants::Constants()
 {
     constants;
+    constantsEnd = constants.end();
 }
 
-//TODO: implement method to add constant to map.
+Constants::Constants(const vector<string>& nameVector,
+                     const vector<int>& valueVector)
+{
+    constants;
+    constantsEnd = constants.end();
+
+    auto nameIter = nameVector.begin();
+    auto namesEnd = nameVector.end();
+
+    auto valueIter = valueVector.begin();
+    auto valuesEnd = valueVector.end();
+
+    while (nameIter != namesEnd &&
+           valueIter != valuesEnd)
+    {
+        if (!addConstant(*nameIter, *valueIter))
+        {
+            break;
+        }
+
+        ++nameIter;
+        ++valueIter;
+    }
+}
+
 bool Constants::addConstant(const string& constantName, int constantValue)
 {
-    return true;
+    auto insertIter = constants.insert(make_pair(constantName, constantValue));
+    return insertIter.second;
 }
 
-//TODO: implement constant lookup method.
 map<string, int>::iterator Constants::lookupConstant(const string& constantName)
 {
-    return constants.begin();
+    auto lookupIter = constants.find(constantName);
+    if (lookupIter != constantsEnd)
+    {
+        return lookupIter;
+    }
+
+    return constantsEnd;
 }
 
-//TODO: implement setting constants to entirely-new map of constants.
 void Constants::setConstants(const map<string, int>& newConstants)
 {
-    return;
+    constants = newConstants;
 }
 
 map<string, int>& Constants::getConstants()

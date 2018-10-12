@@ -21,7 +21,11 @@ HEADERS += \
     Registers.h \
     Labels.h \
     Constants.h \
-    Memory.h
+    Memory.h \
+    tst_Constants.h \
+    tst_Registers.h \
+    tst_Labels.h \
+    tst_Memory.h
 
 SOURCES += \
         main.cpp \
