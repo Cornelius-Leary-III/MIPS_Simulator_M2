@@ -22,6 +22,7 @@ private:
 
     //TODO: determine best way to provide fixed size to memory vector.
     vector<uint8_t> memory;
+    unsigned long memoryMaxSize;
 };
 
 #endif // MEMORY_H

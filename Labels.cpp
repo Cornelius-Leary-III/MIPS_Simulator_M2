@@ -1,30 +1,36 @@
 #include "Labels.h"
 
-//TODO: implement appropriate constructor(s).
 Labels::Labels()
 {
-
+    labels;
 }
 
-//TODO: implement method to add label to map.
 bool Labels::addLabel(const string& labelName,
                       const string& labelType,
                       unsigned labelAddress)
 {
-    return true;
+    auto innerPair = make_pair(labelType, labelAddress);
+    auto outerPair = make_pair(labelName, innerPair);
+    auto insertIter = labels.insert(outerPair);
+
+    return insertIter.second;
 }
 
-//TODO: implement method to lookup label.
 map<string, pair<string, unsigned>>::iterator
     Labels::lookupLabel(const string& labelName)
 {
-    return labels.begin();
+    auto lookupIter = labels.find(labelName);
+    if (lookupIter != labelsEnd)
+    {
+        return lookupIter;
+    }
+
+    return labelsEnd;
 }
 
-//TODO: implement method to set labels to entirely-new map of labels.
 void Labels::setLabels(const map<string, pair<string, unsigned>>& newLabels)
 {
-    return;
+    labels = newLabels;
 }
 
 map<string, pair<string, unsigned>>& Labels::getLabels()

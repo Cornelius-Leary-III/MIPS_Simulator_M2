@@ -1,21 +1,31 @@
 #include "Memory.h"
 
-//TODO: implement appropriate constructor(s).
 Memory::Memory()
 {
-
+    memory;
+    memoryMaxSize = 512;
 }
 
-//TODO: implement method to add byte to memory.
 bool Memory::addByteToMemory(uint8_t newByte)
 {
-    return true;
+    if (memory.size() < memoryMaxSize)
+    {
+        memory.push_back(newByte);
+        return true;
+    }
+
+    return false;
 }
 
-//TODO: implement method to update byte at specific memory location.
 bool Memory::updateMemory(unsigned byteIndex, uint8_t newByte)
 {
-    return true;
+    if (byteIndex < memory.size())
+    {
+        memory[byteIndex] = newByte;
+        return true;
+    }
+
+    return false;
 }
 
 unsigned long Memory::getMemorySize() const
@@ -23,16 +33,19 @@ unsigned long Memory::getMemorySize() const
     return memory.size();
 }
 
-//TODO: implement method to get specific byte from memory.
 uint8_t Memory::getByteFromMemory(unsigned byteIndex)
 {
-    return '0';
+    if (byteIndex < memory.size())
+    {
+        return memory[byteIndex];
+    }
+
+    return '*';
 }
 
-//TODO: implement method to set memory with new vector of bytes.
 void Memory::setMemory(const vector<uint8_t>& newMemory)
 {
-    return;
+    memory = newMemory;
 }
 
 vector<uint8_t>& Memory::getMemory()

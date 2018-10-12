@@ -23,6 +23,7 @@ public:
 
 private:
     map<string, pair<string, unsigned>> labels;
+    map<string, pair<string, unsigned>>::iterator labelsEnd;
 };
 
 #endif // LABELS_H
