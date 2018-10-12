@@ -4,12 +4,15 @@
 #include "token.h"
 #include <string>
 
+#include "VMContents.h"
+
 using std::string;
 
 class DeclarationParser
 {
 public:
-    DeclarationParser(const tokenVector& currentLineToParse);
+    DeclarationParser(const tokenVector& currentLineToParse,
+                      VMContents* newContentsPtr);
 
     bool parse_Declaration();
     bool parse_Constant();
@@ -27,6 +30,7 @@ private:
 
     tokenVector lineOfTokens;
     tokenVector::iterator currentToken;
+    VMContents* contentsPtr;
 
 };
 

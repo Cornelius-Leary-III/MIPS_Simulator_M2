@@ -1,9 +1,11 @@
 #include "DeclarationParser.h"
 
-DeclarationParser::DeclarationParser(const tokenVector& currentLineToParse)
+DeclarationParser::DeclarationParser(const tokenVector& currentLineToParse,
+                                     VMContents* newContentsPtr)
 {
     lineOfTokens = currentLineToParse;
     currentToken = lineOfTokens.begin();
+    contentsPtr = newContentsPtr;
 }
 
 bool DeclarationParser::parse_Declaration()
@@ -67,7 +69,7 @@ bool DeclarationParser::parse_Declaration()
 }
 
 bool DeclarationParser::parse_Constant()
-{
+{   
     auto savedToken = currentToken;
     if (currentToken->type() != STRING)
     {
@@ -92,10 +94,13 @@ bool DeclarationParser::parse_Constant()
         if (!parse_Alpha(*contentChar) &&
             !parse_Digit(*contentChar))
         {
-            break;
+            //TODO: make sure that returning from here doesn't break previous tests.
+            currentToken = savedToken;
+            return false;
         }
         ++contentChar;
     }
+    string constantName = currentToken->contents();
 
     ++currentToken;
 
@@ -113,7 +118,13 @@ bool DeclarationParser::parse_Constant()
         return false;
     }
 
-    return true;
+    int constantValue = std::stoi(currentToken->contents());
+    if (contentsPtr->vmConstants.addConstant(constantName, constantValue))
+    {
+        return true;
+    }
+
+    return false;
 }
 
 bool DeclarationParser::parse_Label()
@@ -152,6 +163,19 @@ bool DeclarationParser::parse_Label()
         currentToken = savedToken;
         return false;
     }
+
+    string labelContents = currentToken->contents();
+    string labelName = labelContents.substr(0, labelContents.length() - 1);
+    auto labelLine = (int) currentToken->line();
+
+    if (contentsPtr->vmLabels.addLabel(labelName, ".data", labelLine))
+    {
+
+    }
+    //TODO: split labels into variables and labels
+    //  --> this will remove a layer of complexity I think.
+    //          variables: the "data labels" --> they point to particular positions in the memory
+    //          labels: the "instruction labels" --> they point to particular instructions in the program
 
     return true;
 }

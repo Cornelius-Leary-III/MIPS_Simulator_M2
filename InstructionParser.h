@@ -3,13 +3,16 @@
 
 #include "token.h"
 
+#include "VMContents.h"
+
 #include <string>
 using std::string;
 
 class InstructionParser
 {
 public:
-    InstructionParser(const tokenVector& currentLineToParse);
+    InstructionParser(const tokenVector& currentLineToParse,
+                      VMContents* newContentsPtr);
 
     bool parse_Instruction();
     bool parse_LabelForInstruction();
@@ -47,6 +50,8 @@ private:
     tokenVector lineOfTokens;
     tokenVector::iterator currentToken;
     tokenVector::iterator lineEnd;
+    VMContents* contentsPtr;
+
 
 };
 

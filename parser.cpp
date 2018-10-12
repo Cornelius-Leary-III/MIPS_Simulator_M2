@@ -29,6 +29,8 @@ parser::parser(std::istream& streamToParse)
     groupTokensByLine();
     fileLineIter = fileSplitUpByLines.begin();
     fileEnd = fileSplitUpByLines.end();
+
+    contentsPtr = new VMContents();
 }
 
 bool parser::parseStream()
@@ -93,7 +95,7 @@ bool parser::dataGrammarParsing()
         declarationProcessor = nullptr;
     }
 
-    declarationProcessor = new DeclarationParser(*fileLineIter);
+    declarationProcessor = new DeclarationParser(*fileLineIter, contentsPtr);
     return declarationProcessor->parse_Declaration();
 }
 
@@ -105,7 +107,7 @@ bool parser::textGrammarParsing()
         instructionProcessor = nullptr;
     }
 
-    instructionProcessor = new InstructionParser(*fileLineIter);
+    instructionProcessor = new InstructionParser(*fileLineIter, contentsPtr);
     return instructionProcessor->parse_Instruction();
 }
 

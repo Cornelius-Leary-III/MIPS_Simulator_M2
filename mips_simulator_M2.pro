@@ -17,7 +17,6 @@ HEADERS += \
     tst_instructionParser.h \
     tst_lexer.h \
     tst_token.h \
-    VirtualMachineContents.h \
     Registers.h \
     Labels.h \
     Constants.h \
@@ -25,7 +24,8 @@ HEADERS += \
     tst_Constants.h \
     tst_Registers.h \
     tst_Labels.h \
-    tst_Memory.h
+    tst_Memory.h \
+    VMContents.h
 
 SOURCES += \
         main.cpp \
@@ -34,8 +34,8 @@ SOURCES += \
     parser.cpp \
     DeclarationParser.cpp \
     InstructionParser.cpp \
-    VirtualMachineContents.cpp \
     Registers.cpp \
     Labels.cpp \
     Constants.cpp \
-    Memory.cpp
+    Memory.cpp \
+    VMContents.cpp

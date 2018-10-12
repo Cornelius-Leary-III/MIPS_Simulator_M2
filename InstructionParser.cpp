@@ -1,10 +1,12 @@
 #include "InstructionParser.h"
 
-InstructionParser::InstructionParser(const tokenVector& currentLineToParse)
+InstructionParser::InstructionParser(const tokenVector& currentLineToParse,
+                                     VMContents* newContentsPtr)
 {
     lineOfTokens = currentLineToParse;
     currentToken = lineOfTokens.begin();
     lineEnd = lineOfTokens.end();
+    contentsPtr = newContentsPtr;
 }
 
 bool InstructionParser::parse_Instruction()

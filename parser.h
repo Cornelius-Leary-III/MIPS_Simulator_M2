@@ -5,6 +5,13 @@
 #include "DeclarationParser.h"
 #include "InstructionParser.h"
 
+//#include "Constants.h"
+//#include "Labels.h"
+//#include "Memory.h"
+//#include "Registers.h"
+
+#include "VMContents.h"
+
 #include <map>
 using std::map;
 
@@ -29,10 +36,10 @@ public:
     bool dataGrammarParsing();
     bool textGrammarParsing();
 
-    map<string, int>& getRegisters();
-    vector<unsigned char>& getMemory();
-    map<string, unsigned int>& getLabels();
-    map<string, int>& getConstants();
+    Constants& getConstants();
+    Labels& getLabels();
+    Memory& getMemory();
+    Registers& getRegisters();
     // vector<Instruction*>& getProgram();
 
 private:
@@ -58,6 +65,8 @@ private:
     bool dataGrammarActive;
     bool textGrammarActive;
     bool streamParsedSafely;
+
+    VMContents* contentsPtr;
 
 
     // vector<Instruction*> program;
