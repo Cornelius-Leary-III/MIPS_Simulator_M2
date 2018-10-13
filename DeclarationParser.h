@@ -16,7 +16,7 @@ public:
 
     bool parse_Declaration();
     bool parse_Constant();
-    bool parse_Label();
+    bool parse_Variable();
     bool parse_Layout();
     bool parse_IntLayout();
     bool parse_StringLayout();
@@ -26,11 +26,19 @@ public:
     bool parse_Alpha(char currentChar);
     bool parse_Char(char currentChar);
 
+    unsigned determineVariableSize();
+    bool processLayout();
+
 private:
 
     tokenVector lineOfTokens;
     tokenVector::iterator currentToken;
     VMContents* contentsPtr;
+
+    string variableName;
+    string variableLayout;
+    string variableValue;
+//    bool variableIsAnArray;
 
 };
 

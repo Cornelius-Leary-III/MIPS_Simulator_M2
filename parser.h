@@ -5,10 +5,8 @@
 #include "DeclarationParser.h"
 #include "InstructionParser.h"
 
-//#include "Constants.h"
-//#include "Labels.h"
-//#include "Memory.h"
-//#include "Registers.h"
+#include "VariablesAndMemoryHandler.h"
+#include "VMContents.h"
 
 #include "VMContents.h"
 
@@ -20,6 +18,7 @@ using std::vector;
 
 #include <sstream>
 using std::stringstream;
+
 
 class parser
 {
@@ -67,7 +66,6 @@ private:
     bool streamParsedSafely;
 
     VMContents* contentsPtr;
-
 
     // vector<Instruction*> program;
 

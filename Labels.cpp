@@ -3,21 +3,16 @@
 Labels::Labels()
 {
     labels;
+    labelsEnd = labels.end();
 }
 
-bool Labels::addLabel(const string& labelName,
-                      const string& labelType,
-                      unsigned labelAddress)
+bool Labels::addLabel(const string& labelName, unsigned labelAddress)
 {
-    auto innerPair = make_pair(labelType, labelAddress);
-    auto outerPair = make_pair(labelName, innerPair);
-    auto insertIter = labels.insert(outerPair);
-
+    auto insertIter = labels.insert(make_pair(labelName, labelAddress));
     return insertIter.second;
 }
 
-map<string, pair<string, unsigned>>::iterator
-    Labels::lookupLabel(const string& labelName)
+map<string, unsigned>::iterator Labels::lookupLabel(const string& labelName)
 {
     auto lookupIter = labels.find(labelName);
     if (lookupIter != labelsEnd)
@@ -28,12 +23,13 @@ map<string, pair<string, unsigned>>::iterator
     return labelsEnd;
 }
 
-void Labels::setLabels(const map<string, pair<string, unsigned>>& newLabels)
+void Labels::setLabels(const map<string, unsigned>& newLabels)
 {
     labels = newLabels;
 }
 
-map<string, pair<string, unsigned>>& Labels::getLabels()
+map<string, unsigned>& Labels::getLabels()
 {
     return labels;
 }
+

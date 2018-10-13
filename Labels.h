@@ -14,16 +14,14 @@ class Labels
 public:
     Labels();
 
-    bool addLabel(const string& labelName,
-                  const string& labelType,
-                  unsigned labelAddress);
-    map<string, pair<string, unsigned>>::iterator lookupLabel(const string& labelName);
-    void setLabels(const map<string, pair<string, unsigned>>& newLabels);
-    map<string, pair<string, unsigned>>& getLabels();
+    bool addLabel(const string& labelName, unsigned labelAddress);
+    map<string, unsigned>::iterator lookupLabel(const string& labelName);
+    void setLabels(const map<string, unsigned>& newLabels);
+    map<string, unsigned>& getLabels();
 
 private:
-    map<string, pair<string, unsigned>> labels;
-    map<string, pair<string, unsigned>>::iterator labelsEnd;
+    map<string, unsigned> labels;
+    map<string, unsigned>::iterator labelsEnd;
 };
 
 #endif // LABELS_H

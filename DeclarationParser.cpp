@@ -6,6 +6,11 @@ DeclarationParser::DeclarationParser(const tokenVector& currentLineToParse,
     lineOfTokens = currentLineToParse;
     currentToken = lineOfTokens.begin();
     contentsPtr = newContentsPtr;
+
+    variableName;
+    variableLayout;
+    variableValue;
+    //    variableIsAnArray = false;
 }
 
 bool DeclarationParser::parse_Declaration()
@@ -25,44 +30,55 @@ bool DeclarationParser::parse_Declaration()
         currentToken = firstToken;
     }
 
-    if (parse_Label())
+    if (parse_Variable())
     {
         ++currentToken;
-        auto optionalLabelLayoutToken = currentToken;
+//        auto optionalLabelLayoutToken = currentToken;
 
         if (parse_Layout())
         {
             ++currentToken;
             if (currentToken->type() == EOL)
             {
-                return true;
+                return processLayout();
             }
         }
-        else
-        {
-            currentToken = optionalLabelLayoutToken;
-            if (currentToken->type() == EOL)
-            {
-                return true;
-            }
-        }
+
+        //TODO: handle the variable-name-only case.
+
+        //        else
+        //        {
+        //            currentToken = optionalLabelLayoutToken;
+        //            if (currentToken->type() == EOL)
+        //            {
+        //                return true;
+        //            }
+        //        }
     }
 
-    currentToken = firstToken;
+    //TODO: handle the 2nd, etc. lines of an array
+    //      --> I've removed the layout-EOL option for a declaration line,
+    //          as I'm not sure how to include / make use of this for multi-line
+    //          arrays.
+    //          * might want to keep a queue of declared layouts?
+    //              - could somehow correlate them together with their preceding
+    //                  array name?
 
-    token tokenBeforeLayoutParsing = *currentToken;
-    token tokenAfterLayoutParsing = *currentToken;
+    //    currentToken = firstToken;
 
-    if (parse_Layout())
-    {
-        tokenAfterLayoutParsing = *currentToken;
+    //    token tokenBeforeLayoutParsing = *currentToken;
+    //    token tokenAfterLayoutParsing = *currentToken;
 
-//        ++currentToken;
-        if (currentToken->type() == EOL)
-        {
-            return true;
-        }
-    }
+    //    if (parse_Layout())
+    //    {
+    //        tokenAfterLayoutParsing = *currentToken;
+
+    //        //        ++currentToken;
+    //        if (currentToken->type() == EOL)
+    //        {
+    //            return true;
+    //        }
+    //    }
 
     currentToken = firstToken;
     return false;
@@ -119,15 +135,10 @@ bool DeclarationParser::parse_Constant()
     }
 
     int constantValue = std::stoi(currentToken->contents());
-    if (contentsPtr->vmConstants.addConstant(constantName, constantValue))
-    {
-        return true;
-    }
-
-    return false;
+    return contentsPtr->constantsPtr->addConstant(constantName, constantValue);
 }
 
-bool DeclarationParser::parse_Label()
+bool DeclarationParser::parse_Variable()
 {
     auto savedToken = currentToken;
     if (currentToken->type() != STRING)
@@ -164,18 +175,14 @@ bool DeclarationParser::parse_Label()
         return false;
     }
 
-    string labelContents = currentToken->contents();
-    string labelName = labelContents.substr(0, labelContents.length() - 1);
-    auto labelLine = (int) currentToken->line();
 
-    if (contentsPtr->vmLabels.addLabel(labelName, ".data", labelLine))
-    {
-
-    }
     //TODO: split labels into variables and labels
     //  --> this will remove a layer of complexity I think.
     //          variables: the "data labels" --> they point to particular positions in the memory
     //          labels: the "instruction labels" --> they point to particular instructions in the program
+
+    string variableContents = currentToken->contents();
+    variableName = variableContents.substr(0, variableContents.length() - 1);
 
     return true;
 }
@@ -187,30 +194,39 @@ bool DeclarationParser::parse_Layout()
 
     if (parse_IntLayout())
     {
+        variableLayout = currentToken->contents();
         ++currentToken;
 
         if (parse_Integer())
         {
+            variableValue = currentToken->contents();
             ++currentToken;
 
-            while (currentToken != tokensEnd)
-            {
-                if (currentToken->type() != SEP)
-                {
-                    break;
-                }
+            //TODO: handle arrays.
+            //      --> currently, I've removed the part of the code that
+            //              checks if there are multiple items declared
+            //              on the same line: this is how arrays are declared.
 
-                ++currentToken;
+            //            while (currentToken != tokensEnd)
+            //            {
+            //                if (currentToken->type() != SEP)
+            //                {
+            //                    break;
+            //                }
+            ////                variableIsAnArray = true;
 
-                if (currentToken != tokensEnd &&
-                    !parse_Integer())
-                {
-                    currentToken = savedToken;
-                    return false;
-                }
+            //                ++currentToken;
 
-                ++currentToken;
-            }
+            //                if (currentToken != tokensEnd &&
+            //                    !parse_Integer())
+            //                {
+            //                    currentToken = savedToken;
+            //                    return false;
+            //                }
+
+            //                ++currentToken;
+            //            }
+
 
             return true;
         }
@@ -220,10 +236,12 @@ bool DeclarationParser::parse_Layout()
 
     if (parse_StringLayout())
     {
+        variableLayout = currentToken->contents();
         ++currentToken;
 
         if (parse_String())
         {
+            variableValue = currentToken->contents();
             ++currentToken;
             return true;
         }
@@ -372,8 +390,77 @@ bool DeclarationParser::parse_Char(char currentChar)
     return isprint(currentChar);
 }
 
+bool DeclarationParser::processLayout()
+{
+    if (variableLayout != ".space")
+    {
+        if (!contentsPtr->variablesPtr->addVariable(variableName, determineVariableSize(), variableValue))
+        {
+            return false;
+        }
 
+        //TODO: determine how to break a variable's value / etc. into bytes to put into memory.
+        uint8_t currentByte = '0';
 
+        //TODO: add loop here to repeat this byte-adding process.
+        if (!contentsPtr->memoryPtr->addByteToMemory(currentByte))
+        {
+            return false;
+        }
+
+        return true;
+    }
+    else
+    {
+        //TODO: just add 0's here for blank spaces when ".space" is chosen.
+
+        //TODO: determine how to break a variable's value / etc. into bytes to put into memory.
+        uint8_t currentByte = '0';
+
+        //TODO: add loop here to repeat this byte-adding process.
+        if (!contentsPtr->memoryPtr->addByteToMemory(currentByte))
+        {
+            return false;
+        }
+
+        return true;
+    }
+}
+
+unsigned DeclarationParser::determineVariableSize()
+{
+    unsigned variableSize;
+    if (variableLayout == ".word")
+    {
+        variableSize = 4;
+    }
+    else if (variableLayout == ".half")
+    {
+        variableSize = 2;
+    }
+    else if (variableLayout == ".byte")
+    {
+        variableSize = 1;
+    }
+    else if (variableLayout == ".space")
+    {
+        variableSize = (unsigned) std::stoi(variableValue);
+    }
+    else if (variableLayout == ".ascii")
+    {
+        variableSize = (unsigned) std::stoi(variableValue);
+    }
+    else if (variableLayout == ".asciiz")
+    {
+        variableSize = (unsigned) std::stoi(variableValue);
+    }
+    else
+    {
+        variableSize = 0;
+    }
+
+    return variableSize;
+}
 
 
 

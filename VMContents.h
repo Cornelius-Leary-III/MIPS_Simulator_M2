@@ -3,8 +3,8 @@
 
 #include "Constants.h"
 #include "Labels.h"
-#include "Memory.h"
 #include "Registers.h"
+#include "VariablesAndMemoryHandler.h"
 
 //class VMContents
 //{
@@ -14,23 +14,29 @@
 
 //    Constants& getConstants();
 //    Labels& getLabels();
-//    Memory& getMemory();
-//    Registers& getRegisters();
+////    Registers& getRegisters();
+
+//    void setConstants(const Constants& newConstants);
+//    void setLabels(const Labels& newLabels);
+////    void setRegisters(const Registers& newRegisters);
 
 //private:
 
-//    Constants vm_constants;
-//    Labels vm_labels;
-//    Memory vm_memory;
-//    Registers vm_registers;
+//    Constants vmConstants;
+//    Labels vmLabels;
+////    Registers vmRegisters;
+//    VariablesAndMemoryHandler varMemHandler;
 //};
 
 struct VMContents
 {
-    Constants vmConstants;
-    Labels vmLabels;
-    Memory vmMemory;
-    Registers vmRegisters;
+    Constants* constantsPtr;
+    Labels* labelsPtr;
+    Memory* memoryPtr;
+    Variables* variablesPtr;
+
+//    VariablesAndMemoryHandler* varMemHandlerPtr;
+//    Registers* registersPtr;
 };
 
 #endif // VMCONTENTS_H

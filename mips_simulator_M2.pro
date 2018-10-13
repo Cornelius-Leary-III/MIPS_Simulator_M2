@@ -25,7 +25,9 @@ HEADERS += \
     tst_Registers.h \
     tst_Labels.h \
     tst_Memory.h \
-    VMContents.h
+    VMContents.h \
+    Variables.h \
+    VariablesAndMemoryHandler.h
 
 SOURCES += \
         main.cpp \
@@ -38,4 +40,6 @@ SOURCES += \
     Labels.cpp \
     Constants.cpp \
     Memory.cpp \
-    VMContents.cpp
+    VMContents.cpp \
+    Variables.cpp \
+    VariablesAndMemoryHandler.cpp
