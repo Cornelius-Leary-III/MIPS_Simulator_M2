@@ -35,6 +35,18 @@ map<string, variableData>::iterator Variables::lookupVariable(const string& vari
     return variablesEnd;
 }
 
+bool Variables::updateVariableValue(const string& variableName, const string& newValue)
+{
+    auto lookupIter = lookupVariable(variableName);
+    if ( lookupIter != variablesEnd)
+    {
+        lookupIter->second.currentValue = newValue;
+        return true;
+    }
+
+    return false;
+}
+
 void Variables::setVariables(const map<string, variableData>& newVariables)
 {
     variables = newVariables;

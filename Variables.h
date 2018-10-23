@@ -27,6 +27,7 @@ public:
                      string newVariableValue);
 
     map<string, variableData>::iterator lookupVariable(const string& variableName);
+    bool updateVariableValue(const string& variableName, const string& newValue);
     void setVariables(const map<string, variableData>& newVariables);
     map<string, variableData>& getVariables();
 

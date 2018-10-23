@@ -27,7 +27,8 @@ HEADERS += \
     tst_Memory.h \
     VMContents.h \
     Variables.h \
-    VariablesAndMemoryHandler.h
+    VariablesAndMemoryHandler.h \
+    tst_Variables.h
 
 SOURCES += \
         main.cpp \
