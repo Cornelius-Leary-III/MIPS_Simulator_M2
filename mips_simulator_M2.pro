@@ -28,9 +28,10 @@ HEADERS += \
     VMContents.h \
     Variables.h \
     tst_Variables.h \
-    Instruction.h \
     Program.h \
-    tst_Instruction.h
+    MIPS_Simulator.h \
+    RawInstruction.h \
+    tst_RawInstruction.h
 
 SOURCES += \
         main.cpp \
@@ -44,5 +45,6 @@ SOURCES += \
     Constants.cpp \
     Memory.cpp \
     Variables.cpp \
-    Instruction.cpp \
-    Program.cpp
+    Program.cpp \
+    MIPS_Simulator.cpp \
+    RawInstruction.cpp

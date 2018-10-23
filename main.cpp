@@ -8,7 +8,7 @@
 #include "tst_Memory.h"
 #include "tst_Registers.h"
 #include "tst_Variables.h"
-#include "tst_Instruction.h"
+#include "tst_RawInstruction.h"
 
 #include "tst_mips_simulator.h"
 

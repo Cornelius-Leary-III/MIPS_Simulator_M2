@@ -7,10 +7,10 @@
 using std::vector;
 using std::string;
 
-class Instruction
+class RawInstruction
 {
 public:
-    Instruction();
+    RawInstruction();
 
     string& getOperation();
     vector<string>& getArguments();

@@ -36,7 +36,7 @@ parser::parser(std::istream& streamToParse)
     contentsPtr->labelsPtr = new Labels();
     contentsPtr->memoryPtr = new Memory();
     contentsPtr->variablesPtr = new Variables();
-    contentsPtr->programPtr = new vector<Instruction>();
+    contentsPtr->programPtr = new vector<RawInstruction>();
 }
 
 bool parser::parseStream()

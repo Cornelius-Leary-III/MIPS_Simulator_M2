@@ -5,7 +5,7 @@
 #include "Labels.h"
 #include "Variables.h"
 #include "Memory.h"
-#include "Instruction.h"
+#include "RawInstruction.h"
 
 struct VMContents
 {
@@ -13,7 +13,7 @@ struct VMContents
     Labels* labelsPtr;
     Memory* memoryPtr;
     Variables* variablesPtr;
-    vector<Instruction>* programPtr;
+    vector<RawInstruction>* programPtr;
 };
 
 #endif // VMCONTENTS_H
