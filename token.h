@@ -2,7 +2,6 @@
 #define TOKEN_H
 
 #include <cstddef>
-//#include <list>
 #include <vector>
 
 #include <ostream>
@@ -45,7 +44,6 @@ bool operator==(const token& lhs, const token& rhs);
 bool operator!=(const token& lhs, const token& rhs);
 std::ostream& operator<<(std::ostream& oss, const token& tokenToPass);
 
-//typedef std::list<token> tokenList;
 using tokenVector = std::vector<token>;
 
 #endif // TOKEN_H

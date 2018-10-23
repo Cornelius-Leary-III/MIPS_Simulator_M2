@@ -17,10 +17,6 @@ public:
 
     tokenVector& getTokens();
 
-//    bool isValid();
-//    void checkForErrors();
-
-
     bool isCurrentCharSequenceNotEmpty();
     void updateLexerStateAfterNewlineChar();
     void updateLexerStateAtEndOfStream(char finalChar);
@@ -62,9 +58,6 @@ protected:
 
     bool stringDelimiterError;
     bool parenthesesError;
-
-
-
 };
 
 #endif // LEXER_H

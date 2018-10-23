@@ -10,7 +10,6 @@ DeclarationParser::DeclarationParser(const tokenVector& currentLineToParse,
     variableName;
     variableLayout;
     variableValue;
-    //    variableIsAnArray = false;
 }
 
 bool DeclarationParser::parse_Declaration()
@@ -33,8 +32,6 @@ bool DeclarationParser::parse_Declaration()
     if (parse_Variable())
     {
         ++currentToken;
-//        auto optionalLabelLayoutToken = currentToken;
-
         if (parse_Layout())
         {
             ++currentToken;
@@ -43,42 +40,7 @@ bool DeclarationParser::parse_Declaration()
                 return processLayout();
             }
         }
-
-        //TODO: handle the variable-name-only case.
-
-        //        else
-        //        {
-        //            currentToken = optionalLabelLayoutToken;
-        //            if (currentToken->type() == EOL)
-        //            {
-        //                return true;
-        //            }
-        //        }
     }
-
-    //TODO: handle the 2nd, etc. lines of an array
-    //      --> I've removed the layout-EOL option for a declaration line,
-    //          as I'm not sure how to include / make use of this for multi-line
-    //          arrays.
-    //          * might want to keep a queue of declared layouts?
-    //              - could somehow correlate them together with their preceding
-    //                  array name?
-
-    //    currentToken = firstToken;
-
-    //    token tokenBeforeLayoutParsing = *currentToken;
-    //    token tokenAfterLayoutParsing = *currentToken;
-
-    //    if (parse_Layout())
-    //    {
-    //        tokenAfterLayoutParsing = *currentToken;
-
-    //        //        ++currentToken;
-    //        if (currentToken->type() == EOL)
-    //        {
-    //            return true;
-    //        }
-    //    }
 
     currentToken = firstToken;
     return false;
@@ -110,7 +72,6 @@ bool DeclarationParser::parse_Constant()
         if (!parse_Alpha(*contentChar) &&
             !parse_Digit(*contentChar))
         {
-            //TODO: make sure that returning from here doesn't break previous tests.
             currentToken = savedToken;
             return false;
         }
@@ -175,12 +136,6 @@ bool DeclarationParser::parse_Variable()
         return false;
     }
 
-
-    //TODO: split labels into variables and labels
-    //  --> this will remove a layer of complexity I think.
-    //          variables: the "data labels" --> they point to particular positions in the memory
-    //          labels: the "instruction labels" --> they point to particular instructions in the program
-
     string variableContents = currentToken->contents();
     variableName = variableContents.substr(0, variableContents.length() - 1);
 
@@ -201,32 +156,6 @@ bool DeclarationParser::parse_Layout()
         {
             variableValue = currentToken->contents();
             ++currentToken;
-
-            //TODO: handle arrays.
-            //      --> currently, I've removed the part of the code that
-            //              checks if there are multiple items declared
-            //              on the same line: this is how arrays are declared.
-
-            //            while (currentToken != tokensEnd)
-            //            {
-            //                if (currentToken->type() != SEP)
-            //                {
-            //                    break;
-            //                }
-            ////                variableIsAnArray = true;
-
-            //                ++currentToken;
-
-            //                if (currentToken != tokensEnd &&
-            //                    !parse_Integer())
-            //                {
-            //                    currentToken = savedToken;
-            //                    return false;
-            //                }
-
-            //                ++currentToken;
-            //            }
-
 
             return true;
         }

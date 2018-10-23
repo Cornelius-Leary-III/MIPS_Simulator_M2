@@ -38,8 +38,6 @@ private:
     string variableName;
     string variableLayout;
     string variableValue;
-//    bool variableIsAnArray;
-
 };
 
 #endif // DECLARATIONPARSER_H

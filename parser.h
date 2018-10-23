@@ -39,7 +39,6 @@ public:
     Labels& getLabels();
     Memory& getMemory();
     Registers& getRegisters();
-    // vector<Instruction*>& getProgram();
 
 private:
 

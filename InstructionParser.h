@@ -51,8 +51,6 @@ private:
     tokenVector::iterator currentToken;
     tokenVector::iterator lineEnd;
     VMContents* contentsPtr;
-
-
 };
 
 #endif // INSTRUCTIONPARSER_H

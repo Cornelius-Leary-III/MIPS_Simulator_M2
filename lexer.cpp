@@ -139,7 +139,6 @@ void lexer::handleEOL()
     handleSTRING();
     updateLexerStateAfterNewlineChar();
     addTokenWithoutContents(EOL);
-//    ++currentLine;
 }
 
 void lexer::updateLexerStateAfterNewlineChar()
