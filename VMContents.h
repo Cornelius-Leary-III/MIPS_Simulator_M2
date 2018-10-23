@@ -3,8 +3,9 @@
 
 #include "Constants.h"
 #include "Labels.h"
-#include "Registers.h"
-#include "VariablesAndMemoryHandler.h"
+#include "Variables.h"
+#include "Memory.h"
+#include "Instruction.h"
 
 struct VMContents
 {
@@ -12,6 +13,7 @@ struct VMContents
     Labels* labelsPtr;
     Memory* memoryPtr;
     Variables* variablesPtr;
+    vector<Instruction>* programPtr;
 };
 
 #endif // VMCONTENTS_H

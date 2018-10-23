@@ -38,7 +38,6 @@ public:
     Constants& getConstants();
     Labels& getLabels();
     Memory& getMemory();
-    Registers& getRegisters();
 
 private:
 

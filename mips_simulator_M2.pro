@@ -27,7 +27,10 @@ HEADERS += \
     tst_Memory.h \
     VMContents.h \
     Variables.h \
-    tst_Variables.h
+    tst_Variables.h \
+    Instruction.h \
+    Program.h \
+    tst_Instruction.h
 
 SOURCES += \
         main.cpp \
@@ -40,4 +43,6 @@ SOURCES += \
     Labels.cpp \
     Constants.cpp \
     Memory.cpp \
-    Variables.cpp
+    Variables.cpp \
+    Instruction.cpp \
+    Program.cpp
