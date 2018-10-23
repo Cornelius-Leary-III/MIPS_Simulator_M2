@@ -45,6 +45,7 @@ bool InstructionParser::parse_Instruction()
 bool InstructionParser::parse_Operation()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (currentToken->type() != STRING)
     {
@@ -63,6 +64,7 @@ bool InstructionParser::parse_Operation()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
 
     if (parse_IntegerArithmeticInstruction())
     {
@@ -70,6 +72,7 @@ bool InstructionParser::parse_Operation()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
 
     if (parse_LogicalInstruction())
     {
@@ -77,6 +80,7 @@ bool InstructionParser::parse_Operation()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
 
     if (parse_ControlInstruction())
     {
@@ -84,12 +88,14 @@ bool InstructionParser::parse_Operation()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_DataMovementInstruction()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (parse_DMI_2_args())
     {
@@ -97,6 +103,7 @@ bool InstructionParser::parse_DataMovementInstruction()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
 
     if (parse_DMI_move())
     {
@@ -104,12 +111,14 @@ bool InstructionParser::parse_DataMovementInstruction()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_DMI_2_args()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (parse_DMI_2_args_load())
     {
@@ -117,6 +126,7 @@ bool InstructionParser::parse_DMI_2_args()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
 
     if (parse_DMI_2_args_store())
     {
@@ -124,16 +134,19 @@ bool InstructionParser::parse_DMI_2_args()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_DMI_2_args_load()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (currentToken->type() != STRING)
     {
         currentToken = firstToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
@@ -142,10 +155,13 @@ bool InstructionParser::parse_DMI_2_args_load()
         currentToken->contents() == "lb" ||
         currentToken->contents() == "la")
     {
+        currentInstructionName = currentToken->contents();
+
         ++currentToken;
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -153,6 +169,7 @@ bool InstructionParser::parse_DMI_2_args_load()
         if (currentToken->type() != SEP)
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -160,6 +177,7 @@ bool InstructionParser::parse_DMI_2_args_load()
         if (!parse_MemoryReference())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -167,10 +185,13 @@ bool InstructionParser::parse_DMI_2_args_load()
     }
     else if (currentToken->contents() == "li")
     {
+        currentInstructionName = currentToken->contents();
+
         ++currentToken;
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -178,6 +199,7 @@ bool InstructionParser::parse_DMI_2_args_load()
         if (currentToken->type() != SEP)
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -185,6 +207,7 @@ bool InstructionParser::parse_DMI_2_args_load()
         if (!parse_Immediate())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -193,6 +216,7 @@ bool InstructionParser::parse_DMI_2_args_load()
     else
     {
         currentToken = firstToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 }
@@ -200,10 +224,12 @@ bool InstructionParser::parse_DMI_2_args_load()
 bool InstructionParser::parse_DMI_2_args_store()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (currentToken->type() != STRING)
     {
         currentToken = firstToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
@@ -211,10 +237,13 @@ bool InstructionParser::parse_DMI_2_args_store()
         currentToken->contents() == "sh" ||
         currentToken->contents() == "sb")
     {
+        currentInstructionName = currentToken->contents();
+
         ++currentToken;
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -222,6 +251,7 @@ bool InstructionParser::parse_DMI_2_args_store()
         if (currentToken->type() != SEP)
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -229,6 +259,7 @@ bool InstructionParser::parse_DMI_2_args_store()
         if (!parse_MemoryReference())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -236,25 +267,31 @@ bool InstructionParser::parse_DMI_2_args_store()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_DMI_move()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (currentToken->type() != STRING)
     {
         currentToken = firstToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
     if (currentToken->contents() == "move")
     {
+        currentInstructionName = currentToken->contents();
+
         ++currentToken;
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -262,6 +299,7 @@ bool InstructionParser::parse_DMI_move()
         if (currentToken->type() != SEP)
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -269,6 +307,7 @@ bool InstructionParser::parse_DMI_move()
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -279,10 +318,13 @@ bool InstructionParser::parse_DMI_move()
              currentToken->contents() == "mthi" ||
              currentToken->contents() == "mtlo")
     {
+        currentInstructionName = currentToken->contents();
+
         ++currentToken;
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -290,12 +332,14 @@ bool InstructionParser::parse_DMI_move()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_IntegerArithmeticInstruction()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (parse_IAI_2_args())
     {
@@ -303,6 +347,7 @@ bool InstructionParser::parse_IntegerArithmeticInstruction()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
 
     if (parse_IAI_3_args())
     {
@@ -310,6 +355,7 @@ bool InstructionParser::parse_IntegerArithmeticInstruction()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
 
     if (parse_IAI_div())
     {
@@ -317,16 +363,19 @@ bool InstructionParser::parse_IntegerArithmeticInstruction()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_IAI_3_args()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (currentToken->type() != STRING)
     {
         currentToken = firstToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
@@ -340,10 +389,13 @@ bool InstructionParser::parse_IAI_3_args()
         currentToken->contents() == "rem" ||
         currentToken->contents() == "remu")
     {
+        currentInstructionName = currentToken->contents();
+
         ++currentToken;
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -351,6 +403,7 @@ bool InstructionParser::parse_IAI_3_args()
         if (currentToken->type() != SEP)
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -358,6 +411,7 @@ bool InstructionParser::parse_IAI_3_args()
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -365,6 +419,7 @@ bool InstructionParser::parse_IAI_3_args()
         if (currentToken->type() != SEP)
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -372,6 +427,7 @@ bool InstructionParser::parse_IAI_3_args()
         if (!parse_Source())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -379,16 +435,19 @@ bool InstructionParser::parse_IAI_3_args()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_IAI_2_args()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (currentToken->type() != STRING)
     {
         currentToken = firstToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
@@ -398,10 +457,13 @@ bool InstructionParser::parse_IAI_2_args()
         currentToken->contents() == "neg" ||
         currentToken->contents() == "negu")
     {
+        currentInstructionName = currentToken->contents();
+
         ++currentToken;
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -409,6 +471,7 @@ bool InstructionParser::parse_IAI_2_args()
         if (currentToken->type() != SEP)
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -416,6 +479,7 @@ bool InstructionParser::parse_IAI_2_args()
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -423,26 +487,32 @@ bool InstructionParser::parse_IAI_2_args()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_IAI_div()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (currentToken->type() != STRING)
     {
         currentToken = firstToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
     if (currentToken->contents() == "div" ||
         currentToken->contents() == "divu")
     {
+        currentInstructionName = currentToken->contents();
+
         ++currentToken;
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -450,6 +520,7 @@ bool InstructionParser::parse_IAI_div()
         if (currentToken->type() != SEP)
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -457,6 +528,7 @@ bool InstructionParser::parse_IAI_div()
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -472,6 +544,7 @@ bool InstructionParser::parse_IAI_div()
                 }
 
                 currentToken = firstToken;
+                currentInstructionArguments = savedArguments;
                 return false;
             }
         }
@@ -481,12 +554,14 @@ bool InstructionParser::parse_IAI_div()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_LogicalInstruction()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (parse_LI_3_args())
     {
@@ -501,16 +576,19 @@ bool InstructionParser::parse_LogicalInstruction()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_LI_3_args()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (currentToken->type() != STRING)
     {
         currentToken = firstToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
@@ -519,10 +597,13 @@ bool InstructionParser::parse_LI_3_args()
         currentToken->contents() == "or" ||
         currentToken->contents() == "xor")
     {
+        currentInstructionName = currentToken->contents();
+
         ++currentToken;
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -530,6 +611,7 @@ bool InstructionParser::parse_LI_3_args()
         if (currentToken->type() != SEP)
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -537,6 +619,7 @@ bool InstructionParser::parse_LI_3_args()
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -544,6 +627,7 @@ bool InstructionParser::parse_LI_3_args()
         if (currentToken->type() != SEP)
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -551,6 +635,7 @@ bool InstructionParser::parse_LI_3_args()
         if (!parse_Source())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -558,25 +643,31 @@ bool InstructionParser::parse_LI_3_args()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_LI_not()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (currentToken->type() != STRING)
     {
         currentToken = firstToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
     if (currentToken->contents() == "not")
     {
+        currentInstructionName = currentToken->contents();
+
         ++currentToken;
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -584,6 +675,7 @@ bool InstructionParser::parse_LI_not()
         if (currentToken->type() != SEP)
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -591,6 +683,7 @@ bool InstructionParser::parse_LI_not()
         if (!parse_Source())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -598,12 +691,14 @@ bool InstructionParser::parse_LI_not()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_ControlInstruction()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (parse_CI_3_args())
     {
@@ -618,16 +713,19 @@ bool InstructionParser::parse_ControlInstruction()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_CI_3_args()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (currentToken->type() != STRING)
     {
         currentToken = firstToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
@@ -638,10 +736,13 @@ bool InstructionParser::parse_CI_3_args()
         currentToken->contents() == "bgt" ||
         currentToken->contents() == "bge")
     {
+        currentInstructionName = currentToken->contents();
+
         ++currentToken;
         if (!parse_Register())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -649,6 +750,7 @@ bool InstructionParser::parse_CI_3_args()
         if (currentToken->type() != SEP)
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -656,6 +758,7 @@ bool InstructionParser::parse_CI_3_args()
         if (!parse_Source())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -663,6 +766,7 @@ bool InstructionParser::parse_CI_3_args()
         if (currentToken->type() != SEP)
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -670,6 +774,7 @@ bool InstructionParser::parse_CI_3_args()
         if (!parse_LabelForInstruction())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -677,25 +782,31 @@ bool InstructionParser::parse_CI_3_args()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_CI_jump()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (currentToken->type() != STRING)
     {
         currentToken = firstToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
     if (currentToken->contents() == "j")
     {
+        currentInstructionName = currentToken->contents();
+
         ++currentToken;
         if (!parse_LabelForInstruction())
         {
             currentToken = firstToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
 
@@ -703,16 +814,19 @@ bool InstructionParser::parse_CI_jump()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_MemoryReference()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (currentToken->type() != STRING)
     {
         currentToken = firstToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
@@ -781,16 +895,19 @@ bool InstructionParser::parse_MemoryReference()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_Source()
 {
     auto firstToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
 
     if (currentToken->type() != STRING)
     {
         currentToken = firstToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
@@ -800,6 +917,7 @@ bool InstructionParser::parse_Source()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
 
     if (parse_Immediate())
     {
@@ -807,12 +925,15 @@ bool InstructionParser::parse_Source()
     }
 
     currentToken = firstToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_LabelForInstruction()
 {
     auto savedToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
+
     if (currentToken->type() != STRING)
     {
         return false;
@@ -826,6 +947,7 @@ bool InstructionParser::parse_LabelForInstruction()
     if (!parse_Alpha(*contentChar))
     {
         currentToken = savedToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
@@ -844,6 +966,7 @@ bool InstructionParser::parse_LabelForInstruction()
     if (*contentChar != ':')
     {
         currentToken = savedToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
@@ -856,12 +979,15 @@ bool InstructionParser::parse_LabelForInstruction()
     }
 
     currentToken = savedToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_Immediate()
 {
     auto savedToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
+
     if (parse_Immediate_Digits())
     {
         return true;
@@ -872,12 +998,15 @@ bool InstructionParser::parse_Immediate()
     }
 
     currentToken = savedToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_Immediate_Digits()
 {
     auto savedToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
+
     if (currentToken->type() != STRING)
     {
         return false;
@@ -891,6 +1020,7 @@ bool InstructionParser::parse_Immediate_Digits()
     if (!parse_Digit(*contentChar))
     {
         currentToken = savedToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
@@ -901,6 +1031,7 @@ bool InstructionParser::parse_Immediate_Digits()
         if (!parse_Digit(*contentChar))
         {
             currentToken = savedToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
         ++contentChar;
@@ -913,6 +1044,8 @@ bool InstructionParser::parse_Immediate_Digits()
 bool InstructionParser::parse_Immediate_Constant()
 {
     auto savedToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
+
     if (currentToken->type() != STRING)
     {
         return false;
@@ -926,6 +1059,7 @@ bool InstructionParser::parse_Immediate_Constant()
     if (!parse_Alpha(*contentChar))
     {
         currentToken = savedToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
@@ -937,6 +1071,7 @@ bool InstructionParser::parse_Immediate_Constant()
             !parse_Digit(*contentChar))
         {
             currentToken = savedToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
         ++contentChar;
@@ -951,12 +1086,15 @@ bool InstructionParser::parse_Immediate_Constant()
     }
 
     currentToken = savedToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
 bool InstructionParser::parse_Register()
 {
     auto savedToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
+
     if (currentToken->type() != STRING)
     {
         return false;
@@ -971,6 +1109,7 @@ bool InstructionParser::parse_Register()
         *contentChar != '$')
     {
         currentToken = savedToken;
+        currentInstructionArguments = savedArguments;
         return false;
     }
 
@@ -982,6 +1121,7 @@ bool InstructionParser::parse_Register()
             !parse_Digit(*contentChar))
         {
             currentToken = savedToken;
+            currentInstructionArguments = savedArguments;
             return false;
         }
         ++contentChar;
@@ -993,6 +1133,8 @@ bool InstructionParser::parse_Register()
 bool InstructionParser::parse_Variable()
 {
     auto savedToken = currentToken;
+    auto savedArguments = currentInstructionArguments;
+
     if (currentToken->type() != STRING)
     {
         return false;
@@ -1008,6 +1150,8 @@ bool InstructionParser::parse_Variable()
         return true;
     }
 
+    currentToken = savedToken;
+    currentInstructionArguments = savedArguments;
     return false;
 }
 
