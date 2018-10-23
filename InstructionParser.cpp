@@ -756,16 +756,25 @@ bool InstructionParser::parse_MemoryReference()
                 return true;
             }
         }
+        else if (parse_Variable())
+        {
+            ++currentToken;
+
+            if (currentToken->type() == CLOSE_PAREN)
+            {
+                return true;
+            }
+        }
     }
     else
     {
         --currentToken;
 
-        if (parse_Register())
+        if (parse_Source())
         {
             return true;
         }
-        else if (parse_Immediate())
+        else if (parse_Variable())
         {
             return true;
         }
