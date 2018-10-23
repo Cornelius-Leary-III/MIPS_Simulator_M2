@@ -241,7 +241,6 @@ bool DeclarationParser::parse_Layout()
 
         if (parse_String())
         {
-            variableValue = currentToken->contents();
             ++currentToken;
             return true;
         }
@@ -365,6 +364,8 @@ bool DeclarationParser::parse_String()
         ++currentChar;
     }
 
+    variableValue = currentToken->contents();
+
     ++currentToken;
     if (currentToken->type() != STRING_DELIM)
     {
@@ -448,11 +449,11 @@ unsigned DeclarationParser::determineVariableSize()
     }
     else if (variableLayout == ".ascii")
     {
-        variableSize = (unsigned) std::stoi(variableValue);
+        variableSize = variableValue.length();
     }
     else if (variableLayout == ".asciiz")
     {
-        variableSize = (unsigned) std::stoi(variableValue);
+        variableSize = variableValue.length() + 1;
     }
     else
     {

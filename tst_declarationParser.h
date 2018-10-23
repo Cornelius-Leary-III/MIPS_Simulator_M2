@@ -11,6 +11,12 @@ using namespace testing;
 //{
 //}
 
+#define TEST_CONSTANTS 1
+#define TEST_LABELS 0
+#define TEST_LAYOUTS 1
+
+#if TEST_CONSTANTS
+
 TEST(declarationParserTest, constant_pass)
 {
     string testString = "  .data\n  constantC = 352";
@@ -58,6 +64,10 @@ TEST(declarationParserTest, constant_fail_digitFirstChar)
 
     EXPECT_FALSE(testParser.parseStream());
 }
+
+#endif // TEST_CONSTANTS
+
+#if TEST_LABELS
 
 TEST(declarationParserTest, label_pass)
 {
@@ -107,9 +117,13 @@ TEST(declarationParserTest, label_fail_digitFirstChar)
     EXPECT_FALSE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_intLayout_word_pass)
+#endif // TEST_LABELS
+
+#if TEST_LAYOUTS
+
+TEST(declarationParserTest, layout_var_intLayout_word_pass)
 {
-    string testString = ".data\n    .word 10";
+    string testString = ".data\n    testVar: .word 10";
 
     stringstream testSS;
     testSS << testString;
@@ -119,9 +133,9 @@ TEST(declarationParserTest, layout_intLayout_word_pass)
     EXPECT_TRUE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_intLayout_word_fail)
+TEST(declarationParserTest, layout_var_intLayout_word_fail)
 {
-    string testString = ".data\n    .word A";
+    string testString = ".data\n    testVar: .word A";
 
     stringstream testSS;
     testSS << testString;
@@ -131,9 +145,9 @@ TEST(declarationParserTest, layout_intLayout_word_fail)
     EXPECT_FALSE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_intLayout_half_pass)
+TEST(declarationParserTest, layout_var_intLayout_half_pass)
 {
-    string testString = ".data\n    .half 4";
+    string testString = ".data\n    testVar: .half 4";
 
     stringstream testSS;
     testSS << testString;
@@ -143,9 +157,9 @@ TEST(declarationParserTest, layout_intLayout_half_pass)
     EXPECT_TRUE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_intLayout_half_fail)
+TEST(declarationParserTest, layout_var_intLayout_half_fail)
 {
-    string testString = ".data\n    .half @";
+    string testString = ".data\n    testVar: .half @";
 
     stringstream testSS;
     testSS << testString;
@@ -155,9 +169,9 @@ TEST(declarationParserTest, layout_intLayout_half_fail)
     EXPECT_FALSE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_intLayout_byte_pass)
+TEST(declarationParserTest, layout_var_intLayout_byte_pass)
 {
-    string testString = ".data\n    .byte 1";
+    string testString = ".data\n    testVar: .byte 1";
 
     stringstream testSS;
     testSS << testString;
@@ -167,9 +181,9 @@ TEST(declarationParserTest, layout_intLayout_byte_pass)
     EXPECT_TRUE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_intLayout_byte_fail)
+TEST(declarationParserTest, layout_var_intLayout_byte_fail)
 {
-    string testString = ".data\n    .byte byte";
+    string testString = ".data\n    testVar: .byte byte";
 
     stringstream testSS;
     testSS << testString;
@@ -179,9 +193,9 @@ TEST(declarationParserTest, layout_intLayout_byte_fail)
     EXPECT_FALSE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_intLayout_space_pass)
+TEST(declarationParserTest, layout_var_intLayout_space_pass)
 {
-    string testString = ".data\n    .space 12";
+    string testString = ".data\n    testVar: .space 12";
 
     stringstream testSS;
     testSS << testString;
@@ -191,9 +205,9 @@ TEST(declarationParserTest, layout_intLayout_space_pass)
     EXPECT_TRUE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_intLayout_space_fail)
+TEST(declarationParserTest, layout_var_intLayout_space_fail)
 {
-    string testString = ".data\n    .space (10)";
+    string testString = ".data\n    testVar: .space (10)";
 
     stringstream testSS;
     testSS << testString;
@@ -203,9 +217,9 @@ TEST(declarationParserTest, layout_intLayout_space_fail)
     EXPECT_FALSE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_intLayout_fail_invalidLayoutKeyword_1)
+TEST(declarationParserTest, layout_var_intLayout_fail_invalidLayoutKeyword_1)
 {
-    string testString = ".data\n    .spice 10";
+    string testString = ".data\n    testVar: .spice 10";
 
     stringstream testSS;
     testSS << testString;
@@ -215,9 +229,9 @@ TEST(declarationParserTest, layout_intLayout_fail_invalidLayoutKeyword_1)
     EXPECT_FALSE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_intLayout_fail_invalidLayoutKeyword_2)
+TEST(declarationParserTest, layout_var_intLayout_fail_invalidLayoutKeyword_2)
 {
-    string testString = ".data\n    word 3";
+    string testString = ".data\n    testVar: word 3";
 
     stringstream testSS;
     testSS << testString;
@@ -227,9 +241,9 @@ TEST(declarationParserTest, layout_intLayout_fail_invalidLayoutKeyword_2)
     EXPECT_FALSE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_stringLayout_ascii_pass)
+TEST(declarationParserTest, layout_var_stringLayout_ascii_pass)
 {
-    string testString = ".data\n    .ascii \"test string goes here\"";
+    string testString = ".data\n    testVar: .ascii \"test string goes here\"";
 
     stringstream testSS;
     testSS << testString;
@@ -239,9 +253,9 @@ TEST(declarationParserTest, layout_stringLayout_ascii_pass)
     EXPECT_TRUE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_stringLayout_asciiz_pass)
+TEST(declarationParserTest, layout_var_stringLayout_asciiz_pass)
 {
-    string testString = ".data\n    .asciiz \"test string with null terminator goes here\"";
+    string testString = ".data\n    testVar: .asciiz \"test string with null terminator goes here\"";
 
     stringstream testSS;
     testSS << testString;
@@ -251,9 +265,9 @@ TEST(declarationParserTest, layout_stringLayout_asciiz_pass)
     EXPECT_TRUE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_stringLayout_ascii_fail_missingClosingStringDelimChar)
+TEST(declarationParserTest, layout_var_stringLayout_ascii_fail_missingClosingStringDelimChar)
 {
-    string testString = ".data\n    .ascii \"test string goes here";
+    string testString = ".data\n    testVar: .ascii \"test string goes here";
 
     stringstream testSS;
     testSS << testString;
@@ -263,9 +277,9 @@ TEST(declarationParserTest, layout_stringLayout_ascii_fail_missingClosingStringD
     EXPECT_FALSE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_stringLayout_asciiz_fail_missingOpeningStringDelimChar)
+TEST(declarationParserTest, layout_var_stringLayout_asciiz_fail_missingOpeningStringDelimChar)
 {
-    string testString = ".data\n    .asciiz test string with null terminator goes here\"";
+    string testString = ".data\n    testVar: .asciiz test string with null terminator goes here\"";
 
     stringstream testSS;
     testSS << testString;
@@ -275,9 +289,9 @@ TEST(declarationParserTest, layout_stringLayout_asciiz_fail_missingOpeningString
     EXPECT_FALSE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_stringLayout_ascii_fail_missingBothStringDelimChars)
+TEST(declarationParserTest, layout_var_stringLayout_ascii_fail_missingBothStringDelimChars)
 {
-    string testString = ".data\n    .ascii test string goes here";
+    string testString = ".data\n    testVar: .ascii test string goes here";
 
     stringstream testSS;
     testSS << testString;
@@ -287,9 +301,9 @@ TEST(declarationParserTest, layout_stringLayout_ascii_fail_missingBothStringDeli
     EXPECT_FALSE(testParser.parseStream());
 }
 
-TEST(declarationParserTest, layout_stringLayout_asciiz_fail_oddNumberOfStringDelimChars)
+TEST(declarationParserTest, layout_var_stringLayout_asciiz_fail_oddNumberOfStringDelimChars)
 {
-    string testString = ".data\n    .asciiz \"test string with null \"terminator goes here\"";
+    string testString = ".data\n    testVar: .asciiz \"test string with null \"terminator goes here\"";
 
     stringstream testSS;
     testSS << testString;
@@ -300,10 +314,7 @@ TEST(declarationParserTest, layout_stringLayout_asciiz_fail_oddNumberOfStringDel
 }
 
 
-
-
-
-
+#endif // TEST_LAYOUTS
 
 
 

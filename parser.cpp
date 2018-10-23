@@ -31,6 +31,11 @@ parser::parser(std::istream& streamToParse)
     fileEnd = fileSplitUpByLines.end();
 
     contentsPtr = new VMContents();
+
+    contentsPtr->constantsPtr = new Constants();
+    contentsPtr->labelsPtr = new Labels();
+    contentsPtr->memoryPtr = new Memory();
+    contentsPtr->variablesPtr = new Variables();
 }
 
 bool parser::parseStream()
