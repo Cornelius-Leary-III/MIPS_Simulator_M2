@@ -22,6 +22,8 @@ bool InstructionParser::parse_Instruction()
         ++currentToken;
         if (currentToken->type() == EOL)
         {
+            //TODO: handle labels (i.e. jumps / branches)
+
             return true;
         }
     }
@@ -31,6 +33,7 @@ bool InstructionParser::parse_Instruction()
         ++currentToken;
         if (currentToken->type() == EOL)
         {
+            addRawInstructionToSet();
             return true;
         }
     }
@@ -713,27 +716,26 @@ bool InstructionParser::parse_MemoryReference()
         return false;
     }
 
-    if (parse_LabelForInstruction())
-    {
-        return true;
-    }
+//    if (parse_LabelForInstruction())
+//    {
+//        return true;
+//    }
+
+//    currentToken = firstToken;
 
     currentToken = firstToken;
 
-    if (parse_Register())
-    {
-        return true;
-    }
-
-    currentToken = firstToken;
+    string offset;
 
     if (currentToken->type() == STRING)
     {
+        offset = currentToken->contents();
         ++currentToken;
     }
 
     if (currentToken->type() == OPEN_PAREN)
     {
+        currentInstructionArguments.push_back(offset);
         ++currentToken;
 
         if (parse_Register())
@@ -744,6 +746,28 @@ bool InstructionParser::parse_MemoryReference()
             {
                 return true;
             }
+        }
+        else if (parse_Immediate())
+        {
+            ++currentToken;
+
+            if (currentToken->type() == CLOSE_PAREN)
+            {
+                return true;
+            }
+        }
+    }
+    else
+    {
+        --currentToken;
+
+        if (parse_Register())
+        {
+            return true;
+        }
+        else if (parse_Immediate())
+        {
+            return true;
         }
     }
 
@@ -814,10 +838,35 @@ bool InstructionParser::parse_LabelForInstruction()
         return false;
     }
 
-    return true;
+    auto nextAvailableInstructionAddress = (unsigned int) contentsPtr->programPtr->size() + 1;
+
+    if (contentsPtr->labelsPtr->addLabel(tokenContents.substr(0, tokenContents.length() - 1),
+                                         nextAvailableInstructionAddress))
+    {
+        return true;
+    }
+
+    currentToken = savedToken;
+    return false;
 }
 
 bool InstructionParser::parse_Immediate()
+{
+    auto savedToken = currentToken;
+    if (parse_Immediate_Digits())
+    {
+        return true;
+    }
+    else if (parse_Immediate_Constant())
+    {
+        return true;
+    }
+
+    currentToken = savedToken;
+    return false;
+}
+
+bool InstructionParser::parse_Immediate_Digits()
 {
     auto savedToken = currentToken;
     if (currentToken->type() != STRING)
@@ -830,8 +879,42 @@ bool InstructionParser::parse_Immediate()
     auto contentChar = tokenContents.begin();
     auto contentEnd = tokenContents.end();
 
-    if (!parse_Alpha(*contentChar) &&
-        !parse_Digit(*contentChar))
+    if (!parse_Digit(*contentChar))
+    {
+        currentToken = savedToken;
+        return false;
+    }
+
+    ++contentChar;
+
+    while (contentChar != contentEnd)
+    {
+        if (!parse_Digit(*contentChar))
+        {
+            currentToken = savedToken;
+            return false;
+        }
+        ++contentChar;
+    }
+
+    currentInstructionArguments.push_back(tokenContents);
+    return true;
+}
+
+bool InstructionParser::parse_Immediate_Constant()
+{
+    auto savedToken = currentToken;
+    if (currentToken->type() != STRING)
+    {
+        return false;
+    }
+
+    string tokenContents;
+    tokenContents = currentToken->contents();
+    auto contentChar = tokenContents.begin();
+    auto contentEnd = tokenContents.end();
+
+    if (!parse_Alpha(*contentChar))
     {
         currentToken = savedToken;
         return false;
@@ -850,7 +933,16 @@ bool InstructionParser::parse_Immediate()
         ++contentChar;
     }
 
-    return true;
+    auto constantsEnd = contentsPtr->constantsPtr->getConstants().end();
+
+    if (contentsPtr->constantsPtr->lookupConstant(tokenContents) != constantsEnd )
+    {
+        currentInstructionArguments.push_back(tokenContents);
+        return true;
+    }
+
+    currentToken = savedToken;
+    return false;
 }
 
 bool InstructionParser::parse_Register()
@@ -866,7 +958,7 @@ bool InstructionParser::parse_Register()
     auto contentChar = tokenContents.begin();
     auto contentEnd = tokenContents.end();
 
-    if (contentChar != contentEnd &&
+    if (contentChar == contentEnd ||
         *contentChar != '$')
     {
         currentToken = savedToken;
@@ -886,7 +978,28 @@ bool InstructionParser::parse_Register()
         ++contentChar;
     }
 
-    return true;
+    return checkForValidRegisterName(tokenContents);
+}
+
+bool InstructionParser::parse_Variable()
+{
+    auto savedToken = currentToken;
+    if (currentToken->type() != STRING)
+    {
+        return false;
+    }
+
+    string tokenContents;
+    tokenContents = currentToken->contents();
+
+    auto variableLookupIter = contentsPtr->variablesPtr->lookupVariable(tokenContents);
+    if (variableLookupIter != contentsPtr->variablesPtr->getVariables().end())
+    {
+        currentInstructionArguments.push_back(tokenContents);
+        return true;
+    }
+
+    return false;
 }
 
 bool InstructionParser::parse_Alpha(char currentChar)
@@ -904,5 +1017,65 @@ bool InstructionParser::parse_Char(char currentChar)
     return isprint(currentChar);
 }
 
+void InstructionParser::addRawInstructionToSet()
+{
+    RawInstruction newRawInstruction;
+    newRawInstruction.setOperation(currentInstructionName);
+    newRawInstruction.setArguments(currentInstructionArguments);
+    newRawInstruction.setLine((unsigned int) currentToken->line());
 
+    contentsPtr->programPtr->push_back(newRawInstruction);
+}
 
+bool InstructionParser::checkForValidRegisterName(const string& registerName)
+{
+    string registerNameNoDollarSign = registerName.substr(1, registerName.length() - 1);
+    if (checkForValidRegisterNumber(registerNameNoDollarSign))
+    {
+        currentInstructionArguments.push_back(registerName);
+        return true;
+    }
+
+    auto nameLookupIter = contentsPtr->validRegisterNamesMapPtr->find(registerName);
+    if ( nameLookupIter != contentsPtr->validRegisterNamesMapPtr->end())
+    {
+        currentInstructionArguments.push_back(nameLookupIter->second);
+        return true;
+    }
+
+    return false;
+}
+
+bool InstructionParser::checkForValidRegisterNumber(const string& registerNumber)
+{
+    char firstCharInRegisterName = registerNumber[0];
+
+    if (parse_Digit(firstCharInRegisterName))
+    {
+        if (registerNumber.length() > 2)
+        {
+            return false;
+        }
+        else if (registerNumber.length() == 1)
+        {
+            return true;
+        }
+        else if (registerNumber.length() == 2)
+        {
+            if (firstCharInRegisterName > 3)
+            {
+                return false;
+            }
+            else if (firstCharInRegisterName == 3)
+            {
+                char secondDigitInRegisterName = registerNumber[1];
+                if (secondDigitInRegisterName > 1)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+    }
+    return false;
+}

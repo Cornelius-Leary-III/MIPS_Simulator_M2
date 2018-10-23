@@ -10,6 +10,8 @@
 #include "tst_Variables.h"
 #include "tst_RawInstruction.h"
 
+#include "tst_Instructions.h"
+
 #include "tst_mips_simulator.h"
 
 

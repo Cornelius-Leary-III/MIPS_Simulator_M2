@@ -5,6 +5,9 @@
 
 #include "VMContents.h"
 
+#include <sstream>
+using std::stringstream;
+
 #include <string>
 using std::string;
 
@@ -21,6 +24,9 @@ public:
     bool parse_MemoryReference();
     bool parse_Source();
     bool parse_Immediate();
+    bool parse_Immediate_Digits();
+    bool parse_Immediate_Constant();
+    bool parse_Variable();
 
     bool parse_DataMovementInstruction();
     bool parse_DMI_2_args();
@@ -47,10 +53,19 @@ public:
 
 private:
 
+    void addRawInstructionToSet();
+    bool checkForValidRegisterName(const string& registerName);
+    bool checkForValidRegisterNumber(const string& registerNumber);
+    bool checkForValidRegisterAlias(const string& registerAlias);
+
     tokenVector lineOfTokens;
     tokenVector::iterator currentToken;
     tokenVector::iterator lineEnd;
     VMContents* contentsPtr;
+
+    string currentInstructionName;
+    vector<string> currentInstructionArguments;
+
 };
 
 #endif // INSTRUCTIONPARSER_H

@@ -18,10 +18,12 @@ public:
     void setOperation(const string& newOperation);
     void setArguments(const vector<string>& newArguments);
     void appendArgument(const string& argumentToAppend);
+    void setLine(unsigned newLineNumber);
 
 private:
     string operation;
     vector<string> arguments;
+    unsigned lineNumber;
 };
 
 #endif // INSTRUCTION_H

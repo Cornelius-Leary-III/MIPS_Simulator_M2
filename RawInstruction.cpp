@@ -4,6 +4,7 @@ RawInstruction::RawInstruction()
 {
     operation = "nop";
     arguments;
+    lineNumber = 1;
 }
 
 string& RawInstruction::getOperation()
@@ -31,3 +32,7 @@ void RawInstruction::appendArgument(const string& argumentToAppend)
     arguments.push_back(argumentToAppend);
 }
 
+void RawInstruction::setLine(unsigned newLineNumber)
+{
+    lineNumber = newLineNumber;
+}

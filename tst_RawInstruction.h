@@ -7,6 +7,9 @@
 
 using namespace testing;
 
+//TODO: update for new class member: "lineNumber"
+
+
 TEST(RawInstruction, constructor)
 {
     RawInstruction testRawInstruction;

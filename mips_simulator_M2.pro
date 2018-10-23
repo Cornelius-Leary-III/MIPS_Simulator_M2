@@ -31,7 +31,9 @@ HEADERS += \
     Program.h \
     MIPS_Simulator.h \
     RawInstruction.h \
-    tst_RawInstruction.h
+    tst_RawInstruction.h \
+    Instructions.h \
+    tst_Instructions.h
 
 SOURCES += \
         main.cpp \
@@ -47,4 +49,5 @@ SOURCES += \
     Variables.cpp \
     Program.cpp \
     MIPS_Simulator.cpp \
-    RawInstruction.cpp
+    RawInstruction.cpp \
+    Instructions.cpp

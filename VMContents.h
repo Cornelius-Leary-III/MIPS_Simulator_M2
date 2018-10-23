@@ -14,6 +14,7 @@ struct VMContents
     Memory* memoryPtr;
     Variables* variablesPtr;
     vector<RawInstruction>* programPtr;
+    map<string, string>* validRegisterNamesMapPtr;
 };
 
 #endif // VMCONTENTS_H
