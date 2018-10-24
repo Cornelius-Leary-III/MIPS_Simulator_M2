@@ -24,8 +24,10 @@ class parser
 {
 public:
 
+    parser();
     parser(std::istream& streamToParse);
 
+    void tokenizeStream(std::istream& streamToTokenize);
     bool parseStream();
 
     bool checkForGrammarChanges();
@@ -35,9 +37,11 @@ public:
     bool dataGrammarParsing();
     bool textGrammarParsing();
 
-    Constants& getConstants();
-    Labels& getLabels();
-    Memory& getMemory();
+//    Constants& getConstants();
+//    Labels& getLabels();
+//    Memory& getMemory();
+
+    VMContents* getContents();
 
 private:
 

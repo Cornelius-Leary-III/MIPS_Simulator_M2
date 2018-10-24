@@ -2,7 +2,10 @@
 #define MIPS_SIMULATOR_H
 
 #include "parser.h"
+#include "Instructions.h"
 
+#include <fstream>
+using std::ifstream;
 
 class MIPS_Simulator
 {
@@ -11,6 +14,15 @@ public:
 
     //TODO: determine how to turn the simulator interface section, described in the Milestone, into
     //          particular methods.
+
+    bool parseFile(const string& fileToParse);
+    bool parseStream(std::istream& streamToParse);
+    bool processRawInstructions();
+    bool printRegisterContents(const string& registerName);
+    bool printByteInMemory(unsigned byteAddress);
+    bool executeCurrentInstruction();
+
+    int processUserInputLoop();
 
     //TODO: these are the likely methods:
     //          * parse file
@@ -24,8 +36,9 @@ public:
 private:
 
     parser mipsParser;
-
+    string fileToParse;
     int currentInstruction;
+    vector<InstructionBase*> program;
 
     // TODO: determine the minimum necessary members to properly meet requirements,
     //          while avoiding all circular dependencies and excessive time / space complexity.
