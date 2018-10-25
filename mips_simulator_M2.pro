@@ -33,7 +33,9 @@ HEADERS += \
     RawInstruction.h \
     tst_RawInstruction.h \
     Instructions.h \
-    tst_Instructions.h
+    tst_Instructions.h \
+    InstructionProcessor.h \
+    VirtualMachine.h
 
 SOURCES += \
         main.cpp \
@@ -50,4 +52,6 @@ SOURCES += \
     Program.cpp \
     MIPS_Simulator.cpp \
     RawInstruction.cpp \
-    Instructions.cpp
+    Instructions.cpp \
+    InstructionProcessor.cpp \
+    VirtualMachine.cpp

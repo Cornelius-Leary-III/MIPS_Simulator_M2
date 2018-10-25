@@ -10,14 +10,14 @@ using std::ifstream;
 class MIPS_Simulator
 {
 public:
-    MIPS_Simulator();
+    MIPS_Simulator(VMContents* contentsPtr);
 
     //TODO: determine how to turn the simulator interface section, described in the Milestone, into
     //          particular methods.
 
-    bool parseFile(const string& fileToParse);
-    bool parseStream(std::istream& streamToParse);
-    bool processRawInstructions();
+//    bool parseFile(const string& fileToParse);
+//    bool parseStream(std::istream& streamToParse);
+//    bool processRawInstructions();
     bool printRegisterContents(const string& registerName);
     bool printByteInMemory(unsigned byteAddress);
     bool executeCurrentInstruction();
@@ -35,10 +35,11 @@ public:
 
 private:
 
-    parser mipsParser;
-    string fileToParse;
+//    parser mipsParser;
+//    string fileToParse;
     int currentInstruction;
     vector<InstructionBase*> program;
+    VMContents* contentsPtr;
 
     // TODO: determine the minimum necessary members to properly meet requirements,
     //          while avoiding all circular dependencies and excessive time / space complexity.
