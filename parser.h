@@ -1,6 +1,7 @@
 #ifndef PARSER_H
 #define PARSER_H
 
+#include "token.h"
 #include "lexer.h"
 #include "DeclarationParser.h"
 #include "InstructionParser.h"
@@ -19,32 +20,24 @@ using std::vector;
 #include <sstream>
 using std::stringstream;
 
-
 class parser
 {
 public:
 
     parser();
-    parser(std::istream& streamToParse);
+    ~parser();
 
-    void tokenizeStream(std::istream& streamToTokenize);
+    void inputTokens(const tokenVector& newTokens);
     bool parseStream();
-
-    bool checkForGrammarChanges();
-    bool checkIfDataGrammar();
-    bool checkIfTextGrammar();
-
-    bool dataGrammarParsing();
-    bool textGrammarParsing();
-
-//    Constants& getConstants();
-//    Labels& getLabels();
-//    Memory& getMemory();
-
     VMContents* getContents();
 
 private:
 
+    bool checkForGrammarChanges();
+    bool checkIfDataGrammar();
+    bool checkIfTextGrammar();
+    bool dataGrammarParsing();
+    bool textGrammarParsing();
     void getAllTokensOnCurrentLine();
     void updateTokenIter();
     void groupTokensByLine();
@@ -53,7 +46,6 @@ private:
     vector<tokenVector>::iterator fileLineIter;
     vector<tokenVector>::iterator fileEnd;
 
-    lexer tokenizer;
     DeclarationParser* declarationProcessor;
     InstructionParser* instructionProcessor;
 
@@ -68,9 +60,6 @@ private:
     bool streamParsedSafely;
 
     VMContents* contentsPtr;
-
-    // vector<Instruction*> program;
-
 };
 
 #endif // PARSER_H

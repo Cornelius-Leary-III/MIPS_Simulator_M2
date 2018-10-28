@@ -10,7 +10,7 @@ InstructionBase::InstructionBase()
     vmContentsPtr->programPtr = new vector<RawInstruction>();
 }
 
-void InstructionBase::execute()
+void InstructionBase::execute(VMContents* newContents)
 {
     cout << "base instruction carried out" << endl;
 }

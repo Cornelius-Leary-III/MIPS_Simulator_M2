@@ -14,6 +14,12 @@ lexer::lexer()
     tokenizedText;
 }
 
+void lexer::tokenizeFile(const string& inputFile)
+{
+    std::ifstream input(inputFile);
+    tokenizeStream(input);
+}
+
 void lexer::tokenizeStream(std::istream& input)
 {
     char inputChar;
@@ -291,4 +297,10 @@ bool lexer::isStringDelimiterErrorPresent()
 bool lexer::isParenthesesErrorPresent()
 {
     return parenthesesError;
+}
+
+bool lexer::isErrorPresent()
+{
+    return (isStringDelimiterErrorPresent() ||
+            isParenthesesErrorPresent());
 }

@@ -14,6 +14,7 @@ public:
     void setVMContents(VMContents* newVMContentsPtr);
     bool processRawInstructions();
 
+    vector<InstructionBase*>& getProgram();
 
 private:
 

@@ -3,6 +3,7 @@
 
 #include "token.h"
 #include <istream>
+#include <fstream>
 #include <sstream>
 
 using std::string;
@@ -13,9 +14,31 @@ public:
 
     lexer();
 
+    void tokenizeFile(const string& inputFile);
     void tokenizeStream(std::istream& input);
 
     tokenVector& getTokens();
+
+    bool isStringDelimiterErrorPresent();
+    bool isParenthesesErrorPresent();
+    bool isErrorPresent();
+
+protected:
+
+    tokenVector tokenizedText;
+
+    size_t currentTokenId;
+    size_t currentLine;
+    string currentCharSequence;
+
+    bool withinComment;
+    bool withinString;
+    int parenthesesDepth;
+
+    bool stringDelimiterError;
+    bool parenthesesError;
+
+private:
 
     bool isCurrentCharSequenceNotEmpty();
     void updateLexerStateAfterNewlineChar();
@@ -41,23 +64,6 @@ public:
     void addTokenStringDelimiterError();
     void addTokenParenthesesError();
     void handleERROR();
-    bool isStringDelimiterErrorPresent();
-    bool isParenthesesErrorPresent();
-
-protected:
-
-    tokenVector tokenizedText;
-
-    size_t currentTokenId;
-    size_t currentLine;
-    string currentCharSequence;
-
-    bool withinComment;
-    bool withinString;
-    int parenthesesDepth;
-
-    bool stringDelimiterError;
-    bool parenthesesError;
 };
 
 #endif // LEXER_H

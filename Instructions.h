@@ -12,7 +12,7 @@ class InstructionBase
 public:
     InstructionBase();
 //    virtual ~InstructionBase() = 0; //TODO: determine rules of destructors in classes derived from base class and for the base class.
-    virtual void execute();
+    virtual void execute(VMContents* newContents);
     virtual void setContents(VMContents* newContents);
     virtual VMContents* getContents();
 

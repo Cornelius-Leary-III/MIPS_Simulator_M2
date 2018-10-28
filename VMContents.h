@@ -6,6 +6,7 @@
 #include "Variables.h"
 #include "Memory.h"
 #include "RawInstruction.h"
+#include "Registers.h"
 
 struct VMContents
 {
@@ -15,6 +16,7 @@ struct VMContents
     Variables* variablesPtr;
     vector<RawInstruction>* programPtr;
     map<string, string>* validRegisterNamesMapPtr;
+    Registers* registersPtr;
 };
 
 #endif // VMCONTENTS_H
