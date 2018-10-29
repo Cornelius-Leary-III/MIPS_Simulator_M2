@@ -29,6 +29,7 @@ public:
 
     void inputTokens(const tokenVector& newTokens);
     bool parseStream();
+    void setContents(VMContents* newContents);
     VMContents* getContents();
 
 private:
